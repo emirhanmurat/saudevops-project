@@ -6,14 +6,14 @@ pipeline {
     }
     
     environment {
-        SNAP_REPO = 'devops-snapshot'
+        SNAP_REPO = 'maven-snapshots'
         NEXUS_USER = 'admin'
         NEXUS_PASS = '[F7s0W@dImFRt1rN`AT,'
-        RELEASE_REPO = 'devops-release'
-        CENTRAL_REPO = 'devops-maven-central'
+        RELEASE_REPO = 'maven-releases'
+        CENTRAL_REPO = 'maven-central'
         NEXUSIP = 'localhost'
         NEXUSPORT = '8081' 
-        NEXUS_GRP_REPO = 'devops-maven-group'
+        NEXUS_GRP_REPO = 'maven-public'
         NEXUS_LOGIN = 'nexuslogin'
     }
     
