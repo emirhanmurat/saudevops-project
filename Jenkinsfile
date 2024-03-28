@@ -13,7 +13,7 @@ pipeline {
         CENTRAL_REPO = 'devops-maven-central'
         NEXUSIP = 'localhost'
         NEXUSPORT = '8081' 
-        NEXUS-GRP-REPO = 'devops-maven-group'
+        NEXUS_GRP_REPO = 'devops-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
     }
     
