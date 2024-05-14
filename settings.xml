@@ -30,7 +30,7 @@
     <mirror>
       <id>${CENTRAL-REPO}</id>
       <name>${CENTRAL-REPO}</name>
-      <url>http://192.168.1.128:8081/repository/maven-central</url>
+      <url>http://localhost:8081/repository/maven-central</url>
       <mirrorOf>*</mirrorOf>
     </mirror>
   </mirrors>
