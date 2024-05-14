@@ -71,6 +71,7 @@ pipeline {
                 }
             }
         }
+                    // true = set pipeline to UNSTABLE, false = don't
 
         stage("UploadArtifact"){
             steps{
