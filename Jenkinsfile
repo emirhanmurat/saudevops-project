@@ -1,5 +1,5 @@
-def COLOR_MAP =[
-    'SUCCES': 'good',
+def COLOR_MAP = [
+    'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
 pipeline {
@@ -101,9 +101,8 @@ pipeline {
         always {
             echo 'Slack Notifications.'
             slackSend channel: '#bitirme-projesi',
-            color: COLOR_MAP[currentBuidl.currentResult],
-            message: "*${curentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD.NUMBER} \n More info at: ${env.BUILD_URL}"
-
+                color: COLOR_MAP[currentBuild.currentResult],
+                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
     }
 }
