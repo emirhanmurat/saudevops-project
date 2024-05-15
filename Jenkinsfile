@@ -1,3 +1,7 @@
+def COLOR_MAP =[
+    'SUCCES': 'good',
+    'FAILURE': 'danger',
+]
 pipeline {
     agent any
     tools {
@@ -64,7 +68,7 @@ pipeline {
         }
          stage("Quality Gate") {
             steps {
-                timeout(time: 1, unit: 'HOURS') {
+                timeout(time: 15, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
@@ -93,5 +97,13 @@ pipeline {
             }
         }
     }
-    
+    post {
+        always {
+            echo 'Slack Notifications.'
+            slackSend channel: '#bitirme-projesi',
+            color: COLOR_MAP[currentBuidl.currentResult],
+            message: "*${curentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD.NUMBER} \n More info at: ${env.BUILD_URL}"
+
+        }
+    }
 }
