@@ -9,7 +9,7 @@ pipeline {
         jdk "TemurinJDK17"
     }
     
-    environment {
+ environment {
         SNAP_REPO = 'maven-snapshots'
 		NEXUS_USER = 'admin'
 		NEXUS_PASS = '[F7s0W@dImFRt1rN`AT,'
@@ -27,7 +27,7 @@ pipeline {
         vprofileRegistry = "https://673942022022.dkr.ecr.eu-north-1.amazonaws.com"
     }
 
-       stages {
+    stages {
         stage('Build'){
             steps {
                 sh 'mvn -s settings.xml -DskipTests install'
@@ -42,7 +42,7 @@ pipeline {
 
         stage('Test'){
             steps {
-                sh 'muvn -s settings.xml test'
+                sh 'mvn -s settings.xml test'
             }
 
         }
@@ -52,8 +52,8 @@ pipeline {
                 sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
-            stage('Sonar Analysis') 
-            {
+
+        stage('Sonar Analysis') {
             environment {
                 scannerHome = tool "${SONARSCANNER}"
             }
@@ -70,16 +70,16 @@ pipeline {
               }
             }
         }
-         stage("Quality Gate") {
+
+        stage("Quality Gate") {
             steps {
-                timeout(time: 15, unit: 'MINUTES') {
+                timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
-                    // true = set pipeline to UNSTABLE, false = don't
 
         stage("UploadArtifact"){
             steps{
@@ -100,39 +100,28 @@ pipeline {
                 )
             }
         }
-    }
-         stage('Build App Image') {
-            agent {
-                docker {
-                    image 'docker:19.03.12'
-                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
+
+        stage('Build App Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${appRegistry}:${env.BUILD_NUMBER}", "./Docker-files/app/multistage/")
+                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
                 }
             }
         }
-
+        
         stage('Upload App Image') {
-            agent {
-                docker {
-                    image 'docker:19.03.12'
-                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-                }
+          steps{
+            script {
+              docker.withRegistry( vprofileRegistry, registryCredential ) {
+                dockerImage.push("$BUILD_NUMBER")
+                dockerImage.push('latest')
+              }
             }
-            steps {
-                script {
-                    docker.withRegistry(vprofileRegistry, registryCredential) {
-                        dockerImage.push("${env.BUILD_NUMBER}")
-                        dockerImage.push('latest')
-                    }
-                }
-            }
+          }
         }
-    }
 
+
+    }
     post {
         always {
             echo 'Slack Notifications.'
@@ -142,4 +131,3 @@ pipeline {
         }
     }
 }
-
