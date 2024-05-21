@@ -21,7 +21,7 @@ pipeline {
         NEXUS_LOGIN = 'nexuslogin'
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
-        DOCKER_HOST = "tcp://13.49.57.199:2375"
+        //DOCKER_HOST = "tcp://13.49.57.199:2375"
         registryCredential = "ecr:eu-north-1:awscred"
         appRegistry = "673942022022.dkr.ecr.eu-north-1.amazonaws.com/saudevopsimg"
         vprofileRegistry = "https://673942022022.dkr.ecr.eu-north-1.amazonaws.com"
@@ -100,13 +100,45 @@ pipeline {
                 )
             }
         }
+/*
+ stage('Build App Image') {
+            agent {
+                docker {
+                    image 'docker:19.03.12'
+                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                script {
+                    dockerImage = docker.build("${appRegistry}:${env.BUILD_NUMBER}", "./Docker-files/app/multistage/")
+                }
+            }
+        }
 
+        stage('Upload App Image') {
+            agent {
+                docker {
+                    image 'docker:19.03.12'
+                    args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                script {
+                    docker.withRegistry(vprofileRegistry, registryCredential) {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+    }*/
     post {
         always {
             echo 'Slack Notifications.'
-            slackSend channel: '#bitirme-projesi',
+            slackSend channel: '#jenkinscicd',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
     }
+}
 }
