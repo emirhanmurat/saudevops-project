@@ -10,7 +10,7 @@ pipeline {
     }
     
  environment {
-        SNAP_REPO = 'maven-snapshots'
+        /*SNAP_REPO = 'maven-snapshots'
 		NEXUS_USER = 'admin'
 		NEXUS_PASS = '[F7s0W@dImFRt1rN`AT,'
 		RELEASE_REPO = 'maven-releases'
@@ -20,7 +20,7 @@ pipeline {
 		NEXUS_GRP_REPO = 'maven-public'
         NEXUS_LOGIN = 'nexuslogin'
         SONARSERVER = 'sonarserver'
-        SONARSCANNER = 'sonarscanner'
+        SONARSCANNER = 'sonarscanner'*/
         //DOCKER_HOST = "tcp://13.49.57.199:2375"
         registryCredential = "ecr:eu-north-1:awscred"
         appRegistry = "673942022022.dkr.ecr.eu-north-1.amazonaws.com/saudevopsimg"
@@ -28,18 +28,18 @@ pipeline {
     }
 
     stages {
-        stage('Build'){
-            steps {
-                sh 'mvn -s settings.xml -DskipTests install'
-            }
-            post {
-                success {
-                    echo "Now Archiving."
-                    archiveArtifacts artifacts: '**/*.war'
-                }
-            }
-        }
-
+        //stage('Build'){
+          //  steps {
+          //      sh 'mvn -s settings.xml -DskipTests install'
+         //   }
+          //  post {
+          //      success {
+         //           echo "Now Archiving."
+          //          archiveArtifacts artifacts: '**/*.war'
+          //      }
+       //     }
+     //   }
+/*
         stage('Test'){
             steps {
                 sh 'mvn -s settings.xml test'
@@ -99,7 +99,7 @@ pipeline {
                   ]
                 )
             }
-        }
+        }*/
          stage('Build App Image') {
             steps {
                 script {
