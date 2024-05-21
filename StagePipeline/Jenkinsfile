@@ -21,7 +21,7 @@ pipeline {
         NEXUS_LOGIN = 'nexuslogin'
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
-        DOCKER_HOST = "tcp://13.49.57.199:2375"
+        //DOCKER_HOST = "tcp://13.49.57.199:2375"
         registryCredential = "ecr:eu-north-1:awscred"
         appRegistry = "673942022022.dkr.ecr.eu-north-1.amazonaws.com/saudevopsimg"
         vprofileRegistry = "https://673942022022.dkr.ecr.eu-north-1.amazonaws.com"
