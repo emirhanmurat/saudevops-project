@@ -3,7 +3,7 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 pipeline {
-    agent aws-ubuntu
+    agent {label 'docker'}
     tools {
         //maven "MAVEN3"
         jdk "TemurinJDK17"
