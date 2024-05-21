@@ -3,7 +3,7 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 pipeline {
-    agent any
+    agent anime
     tools {
         maven "MAVEN3"
         jdk "TemurinJDK17"
