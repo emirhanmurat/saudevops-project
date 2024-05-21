@@ -26,6 +26,7 @@ pipeline {
         appRegistry = "673942022022.dkr.ecr.eu-north-1.amazonaws.com/saudevopsimg"
         vprofileRegistry = "https://673942022022.dkr.ecr.eu-north-1.amazonaws.com"
     }
+     stages {
         stage('Build App Image') {
             steps {
                 script {
@@ -53,4 +54,5 @@ pipeline {
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
     }
+}
 }
