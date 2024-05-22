@@ -3,14 +3,14 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 pipeline {
-    agent {label 'docker'}
+    agent any
     tools {
         maven "MAVEN3"
         jdk "TemurinJDK17"
     }
     
  environment {
-        /*SNAP_REPO = 'maven-snapshots'
+        SNAP_REPO = 'maven-snapshots'
 		NEXUS_USER = 'admin'
 		NEXUS_PASS = '[F7s0W@dImFRt1rN`AT,'
 		RELEASE_REPO = 'maven-releases'
@@ -20,26 +20,28 @@ pipeline {
 		NEXUS_GRP_REPO = 'maven-public'
         NEXUS_LOGIN = 'nexuslogin'
         SONARSERVER = 'sonarserver'
-        SONARSCANNER = 'sonarscanner'*/
+        SONARSCANNER = 'sonarscanner'
         //DOCKER_HOST = "tcp://13.49.57.199:2375"
         registryCredential = "ecr:eu-north-1:awscred"
         appRegistry = "673942022022.dkr.ecr.eu-north-1.amazonaws.com/saudevopsimg"
         vprofileRegistry = "https://673942022022.dkr.ecr.eu-north-1.amazonaws.com"
+        cluster = "devopsproject-staging"
+        service = "satagingapp-svc"
     }
 
     stages {
-        //stage('Build'){
-          //  steps {
-          //      sh 'mvn -s settings.xml -DskipTests install'
-         //   }
-          //  post {
-          //      success {
-         //           echo "Now Archiving."
-          //          archiveArtifacts artifacts: '**/*.war'
-          //      }
-       //     }
-     //   }
-/*
+        stage('Build'){
+            steps {
+                sh 'mvn -s settings.xml -DskipTests install'
+            }
+            post {
+                success {
+                    echo "Now Archiving."
+                    archiveArtifacts artifacts: '**/*.war'
+                }
+            }
+        }
+
         stage('Test'){
             steps {
                 sh 'mvn -s settings.xml test'
@@ -73,7 +75,7 @@ pipeline {
 
         stage("Quality Gate") {
             steps {
-                timeout(time: 1, unit: 'HOURS') {
+                timeout(time: 15, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
@@ -99,30 +101,44 @@ pipeline {
                   ]
                 )
             }
-        }*/
-         stage('Build App Image') {
+        }
+stage('Build App Image') {
+            agent { label 'docker'}
             steps {
                 script {
-                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                    dockerImage = docker.build("${appRegistry}:${env.BUILD_NUMBER}", "./Docker-files/app/multistage/")
                 }
             }
         }
-        
+
         stage('Upload App Image') {
-          steps{
-            script {
-              docker.withRegistry( vprofileRegistry, registryCredential ) {
-                dockerImage.push("$BUILD_NUMBER")
-                dockerImage.push('latest')
-              }
+           agent { label 'docker'}
+
+            steps {
+                script {
+                    docker.withRegistry(vprofileRegistry, registryCredential) {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push('latest')
+                    }
+                }
             }
-          }
+        }
+
+
+
+
+        stage('Deploy to ECS staging') {
+            steps {
+                withAWS(credentials: 'awscreds', region: 'eu-north-1') {
+                    sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                } 
+            }
         }
     }
     post {
         always {
             echo 'Slack Notifications.'
-            slackSend channel: '#jenkinscicd',
+            slackSend channel: '#bitirme-projesi',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
