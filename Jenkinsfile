@@ -23,8 +23,8 @@ pipeline {
         SONARSCANNER = 'sonarscanner'
         ARTIFACT_NAME = "vprofile-v${BUILD_ID}.war"
         AWS_S3_BUCKET = 'saudevops-bean'
-        AWS_EB_APP_NAME = 'devopsstaging-env'
-        AWS_EB_ENVIRONMENT = 'Devopsstaging-env-env'
+        AWS_EB_APP_NAME = 'staging-saudevops'
+        AWS_EB_ENVIRONMENT = 'Staging-saudevops-env'
         AWS_EB_APP_VERSION = "${BUILD_ID}"
 
 
