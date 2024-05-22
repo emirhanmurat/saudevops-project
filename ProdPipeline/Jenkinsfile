@@ -6,8 +6,8 @@ pipeline {
     agent any
     
  environment {
-        cluster = "saudevopsprod"
-        service = "saudevopsprodsvc"
+        cluster = "saudevopsprojectprod"
+        service = "saudevopsproject"
     }
 
     stages {
@@ -16,7 +16,7 @@ pipeline {
         stage('Deploy to ECS staging') {
             steps {
                 withAWS(credentials: 'awscred', region: 'eu-north-1') {
-                 sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                 sh 'aws ecs update-service --cluster ${cluster} --sevice ${service} --force-new-deployment'
                 } 
             }
         }
