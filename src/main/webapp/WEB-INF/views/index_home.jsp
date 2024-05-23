@@ -127,7 +127,7 @@
   <!-- Contact Section -->
   <div class="container w3-padding-32" id="contact">
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16" align="center">CONTACT</h3>
-    <p>Lets get in touch and talk about your and our next project.</p>
+    <p>Lets get in touch and talk about your and our next project CICD Push 1.</p>
     <form action="/action_page.php" target="_blank">
       <input class="w3-input" type="text" placeholder="Name" required name="Name">
       <input class="w3-input w3-section" type="text" placeholder="Email" required name="Email">
