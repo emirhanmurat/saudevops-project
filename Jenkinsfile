@@ -8,7 +8,7 @@ pipeline {
     agent any
     tools {
         maven "MAVEN3"
-        jdk "TemurinJDK17"
+        jdk "TemurinJDK11"
     }
     
     environment {
@@ -35,7 +35,7 @@ pipeline {
        stages {
         stage('Deploy to Stage Bean'){
           steps {
-            withAWS(credentials: 'awsbeancreds', region: 'us-west-1') {
+            withAWS(credentials: 'awsbeancred', region: 'eu-north-1') {
                sh 'aws elasticbeanstalk update-environment --application-name $AWS_EB_APP_NAME --environment-name $AWS_EB_ENVIRONMENT --version-label $AWS_EB_APP_VERSION'
             }
           }
