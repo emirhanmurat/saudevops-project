@@ -1,4 +1,4 @@
-def buildNumber = Jenkins.instance.getItem('ciccd-jenbean').lastSuccessfulBuild.number
+def buildNumber = Jenkins.instance.getItem('awsbean-pipeline').lastSuccessfulBuild.number
 def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
