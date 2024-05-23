@@ -7,7 +7,7 @@ pipeline {
     agent any
     tools {
         maven "MAVEN3"
-        jdk "TemurinJDK11"
+        jdk "TemurinJDK17"
     }
     
     environment {
@@ -24,8 +24,8 @@ pipeline {
         SONARSCANNER = 'sonarscanner'
         ARTIFACT_NAME = "vprofile-v${buildNumber}.war"
         AWS_S3_BUCKET = 'saudevops-bean'
-        AWS_EB_APP_NAME = 'production-saudevops'
-        AWS_EB_ENVIRONMENT = 'Production-saudevops-env'
+        AWS_EB_APP_NAME = 'project-saudevops'
+        AWS_EB_ENVIRONMENT = 'Project-saudevops-prod-env'
         AWS_EB_APP_VERSION = "${buildNumber}"
 
 
